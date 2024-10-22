@@ -3,7 +3,7 @@ Encryption/decryption tool
 """
 
 import argparse
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet, InvalidToken
 
 def load_secret_key(secret_key_file):
     """Loads the secret key from a file."""
@@ -40,9 +40,9 @@ def decrypt_file(filename, key):
     # Try to decrypt the data
     try:
         decrypted_data = fernet.decrypt(encrypted_data)
-    except Exception as e:
-        print(f"Decryption failed. Incorrect secret key or corrupted file. Error: {e}")
-        return   
+    except InvalidToken:
+        print("Decryption failed. Incorrect secret key or corrupted file.")
+        return
 
     # Save the decrypted data to a new file
     decrypted_filename = filename.replace('.encrypted', '')
